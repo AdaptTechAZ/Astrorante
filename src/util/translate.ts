@@ -81,7 +81,12 @@ export function mergeOpeningHours(days: OpeningHourStoryblok[], lang: string) {
     days
       .filter((day) => day.day == d + "")
       .map((hours) => {
-        openString += `<span>${convertToLocaleTime(hours.time.time.start, lang)} - ${convertToLocaleTime(hours.time.time.end,lang)} </span>`;
+        // The theme's own "chosio-time" field-type plugin isn't installed in
+        // this space, so opening_hour.time is stored as a plain "start,end"
+        // string (see astrorante-demo/migrate/run.js) instead of that
+        // plugin's nested object shape.
+        const [start, end] = String(hours.time).split(',');
+        openString += `<span>${convertToLocaleTime(start, lang)} - ${convertToLocaleTime(end, lang)} </span>`;
       });
 
     /* get the localized day names */
